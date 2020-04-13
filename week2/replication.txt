@@ -1,0 +1,62 @@
+Objective - To create a 3 node mongodb cluster with two secondary replcia database with one having read-oly and delay of 1hr.
+We will be doing this assignment by using docker and docker network.
+
+STEP-1
+pull the mongo docker image from the command given below.
+docker pull mongo
+
+STEP-2
+now we will make a docker network by the name of "week2-mongo-cluster". To that run the command-
+docker network create week2-mongo-cluster
+
+STEP-3
+Now we will run 3 mongo instances in the network "week2-mongo-cluster" and also make a replica set by the name "rs0", in daemon using the -d parameter.
+run the following commands for this -
+1. docker run -d --name mongo-node-1 --net week2-mongo-cluster mongo --replSet "rs0"
+2. docker run -d --name mongo-node-2 --net week2-mongo-cluster mongo --replSet "rs0"
+3. docker run -d --name mongo-node-3 --net week2-mongo-cluster mongo --replSet "rs0"
+
+This will start 3 instances of mongo image
+
+STEP-4
+use the docker exec command to use the first container-
+docker run -it mongo-node-1 mongo
+
+You will now be in the mongo interface of the mongo-node-1 container.
+
+STEP-6
+make a config document given below-
+
+config = {
+      "_id" : "rs0",
+      "members" : [
+          {
+              "_id" : 0,
+              "host" : "mongo-node-1:27017"
+          },
+          {
+              "_id" : 1,
+              "host" : "mongo-node-2:27017"
+          },
+          {
+              "_id" : 2,
+              "host" : "mongo-node-3:27017",
+              "priority" : 0,
+              "slaveDelay": 3600,
+              "hidden": true
+          }
+      ]
+  }
+
+here host with the name "mongo-node-3:27017" is the read only slave replica with dealy of 1Hr and this node cannot be a primary node.
+
+STEP-7
+run the following command to initiate the above config document-
+rs.initiate(config)
+
+STEP-8
+now you can log into other containers and set the salve status by the following commands-
+rs.slaveOk(true)
+
+OBSERVATION-
+you will observe that data gets replciated instantly in "mongo-node-2" but in "mongo-node-3" it will take 1hr to get a replica.
