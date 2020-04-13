@@ -1,0 +1,13 @@
+language: java
+sudo: required
+services: docker
+addons:
+  apt:
+    update: true
+before_install:
+    - cd week1/java-maven-app
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn -B -DskipTests clean package
+  - mvn test
+script: cd jenkins/scripts/
+  - package.sh
