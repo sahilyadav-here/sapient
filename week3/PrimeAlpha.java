@@ -1,7 +1,6 @@
 import java.util.*;
-import java.lang.*;
 
-public class prime_alpha {
+public class PrimeAlpha {
     public static HashMap<Character, Integer> getPrimeList(int count){
         char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
         HashMap<Character, Integer> hmap = new HashMap<Character, Integer>();
@@ -29,7 +28,7 @@ public class prime_alpha {
     public static void displayHexaCode(String input){
         try{
             HashMap<Character, Integer> hmap = getPrimeList(26);
-            StringBuffer output = new StringBuffer();
+            StringBuilder output = new StringBuilder();
             input = input.toLowerCase();
             for(int i =0;i<input.length();i++){
                 char c = input.charAt(i);
@@ -37,10 +36,9 @@ public class prime_alpha {
             }
             System.out.println(output.toString().toUpperCase());
         }catch(Exception e){
-            System.out.println(e);
-            System.out.println("use only alpha string");
+            e.printStackTrace();
+            System.err.println("use only alpha string");
         }
-
     }
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
