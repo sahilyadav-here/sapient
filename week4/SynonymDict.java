@@ -30,7 +30,7 @@ public class SynonymDict {
               System.out.println(k);
             }
           }else{
-            System.out.println("the word is not in the dict, would you like to add it? press Y for yes, else press any key");
+            System.out.println("the word is not in the dict, would you like to add it? press Y for yes, else any key");
             String res = sc.nextLine();
             if(res.charAt(0) == 'Y'){
               ArrayList<String> temp = new ArrayList<String>();
