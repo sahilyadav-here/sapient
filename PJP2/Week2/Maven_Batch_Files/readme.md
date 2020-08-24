@@ -1,0 +1,3 @@
+This reduces the execution and build time since multiple project might require same dependencies so maven would not have to download the same dependency for different projects. These dependencies are stored on the developers machine.
+
+Maven first checks the local repository for the dependency and if its not available there then asks the remote serever to provide the dependency and also stores it in the local machine for future need.
