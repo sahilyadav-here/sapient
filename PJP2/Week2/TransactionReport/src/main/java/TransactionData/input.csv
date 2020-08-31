@@ -1,4 +1,3 @@
-External Transaction Id,Client Id,Security Id,Transaction Type,Transaction Date,Market Value,Priority Flag
 SAPEXTXN1,GS,ICICI,BUY,11/23/2013,101.9,Y
 SAPEXTXN2,AS,REL,SELL,11/20/2013,121.9,N
 SAPEXTXN3,AP,HINDALCO,DEPOSIT,11/19/2013,120,Y

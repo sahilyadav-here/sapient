@@ -1,95 +1,66 @@
 package com.sahil.TransactionReport;
 
+import java.util.HashMap;
+import java.util.List;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+
+import TransactionData.Transactions;
 
 public class LogGenerator {
-	private String cId;
-	private String tType;
-	private String tDate;
-	private boolean flag;
-	private float fee;
-	public static String log = "";
-	public String getcId() {
-		return cId;
-	}
-	public void setcId(String cId) {
-		this.cId = cId;
-	}
-	public String gettType() {
-		return tType;
-	}
-	public void settType(String tType) {
-		this.tType = tType;
-	}
-	public String gettDate() {
-		return tDate;
-	}
-	public void settDate(String tDate) {
-		this.tDate = tDate;
-	}
-	public boolean isFlag() {
-		return flag;
-	}
-	public void setFlag(boolean flag) {
-		this.flag = flag;
-	}
-	public float getFee() {
-		return fee;
-	}
-	public void setFee(float fee) {
-		this.fee = fee;
-	}
-	public LogGenerator(String cId, String tType, String tDate, boolean flag, float fee) {
-		super();
-		this.cId = cId;
-		this.tType = tType;
-		this.tDate = tDate;
-		this.flag = flag;
-		this.fee = fee;
-	}
-	@Override
-	public String toString() {
-		return "LogGenerator [cId=" + cId + ", tType=" + tType + ", tDate=" + tDate + ", flag=" + flag + ", fee=" + fee
-				+ "]";
-	}
-	
-	public static void detailLog(String line)
-	{
-		String [] arr = line.split(",");
-		System.out.println(arr[5]);
-		if(arr[2].equals(""))
-		{
-			log  = log + arr[1] + "," + arr[3] + "," + arr[4] + "," + arr[6];
-			if(arr[6].equals("N"))
-				log = log + "," + "500";
-			else
-			{
-				if(arr[3].equals("sell") || arr[3].equals("withdraw"))
-					log = log + "," + "100";
-				else
-					log = log + "," + "50";
-			}
-			log = log + "\n";
-		}
-		else
-		{
-			log = log + arr[1] + "," + arr[3] + "," + arr[4] + "," + "N" +"," + "10" + "\n";
-		}
-	}
-	public static String printLog() throws IOException
-	{
+	static HashMap<String, Transactions> transactionMap = new HashMap<String, Transactions>();
+	static List<Log> reportList = new ArrayList<Log>();
 
-		try{    
-			String csvFile = System.getProperty("user.dir") + "/src/main/java/TransactionData/output.csv";
-	        FileWriter fw=new FileWriter(csvFile);    
-	        fw.write(log);  
-	        System.out.println(log);
-	        fw.close();
-	       }catch(Exception e){System.out.println(e);}    
-	       System.out.println("Success...");
-	       return log;
+	public static List<Log> calculate(List<Transactions> transactionList) throws IOException {
+
+		for (Transactions transaction : transactionList) {
+			String key = transaction.getcId() + "_" + transaction.getsId() + "_"
+					+ transaction.gettDate().toString();
+//			System.out.println(key);
+
+			if (transactionMap.containsKey(key)) {
+				Transactions previousTransaction = transactionMap.get(key);
+				if (transaction.gettType().equals("SELL") && previousTransaction.gettType().equals("BUY")) {
+					previousTransaction.settType("INTRADAY");
+
+				}
+
+			} else {
+				transactionMap.put(key, transaction);
+			}
+		}
+		System.out.println("**** log details ****");
+		for (String key : transactionMap.keySet()) {
+
+			Transactions transaction = transactionMap.get(key);
+			String clientId = transaction.getcId();
+			String type = transaction.gettType();
+			String transactionDate = transaction.gettDate();
+			boolean isPriority = transaction.isFlag();
+			float processingFee = Rate.getRates(type, isPriority);
+			Log reportItem = new Log(clientId, type, transactionDate, isPriority,
+					processingFee);
+			System.out.println(reportItem.toString());
+			reportList.add(reportItem);
+			
+		}
+		printLog(reportList);
+		return reportList;
 	}
-	
+
+	private static void printLog(List<Log> reportList2) throws IOException {
+		// TODO Auto-generated method stub
+		String path = System.getProperty("user.dir") + "/src/main/java/TransactionData/logFile.txt";  
+	        FileWriter fw=new FileWriter(path);
+	        for(Log i : reportList2) {
+	        	fw.write(i.toString());
+	        	fw.write(System.getProperty("line.separator"));
+	        }
+	        fw.close();
+	        System.out.println("Success with log file generation"); 
+	       
+		
+	}
 
 }
