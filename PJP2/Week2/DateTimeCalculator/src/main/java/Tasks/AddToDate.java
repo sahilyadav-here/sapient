@@ -15,7 +15,7 @@ public class AddToDate {
 	}
 	public LocalDate addWeeksToDate(LocalDate date , int weeks)
 	{
-		return date.plusMonths(weeks);
+		return date.plusWeeks(weeks);
 	}
 	
 	public LocalDate addMonthsToDate(LocalDate date , int months)
