@@ -9,6 +9,10 @@ router.get('/', (req, res,next)=>{
    res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
+router.get('/ajax', (req, res,next)=>{
+   res.sendFile(path.join(__dirname, 'site_via_ajax', 'site.html'));
+});
+
 
 
 router.post('/post-datequery', (req, res, next)=>{
