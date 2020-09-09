@@ -6,8 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "sahilyadav-here",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sahilyadav-here/sapient/tree/master/PJP2/Week3/calculator-nodejs"
+  },
   "publishConfig": { 
     "registry": "https://npm.pkg.github.com/" 
   },
